@@ -1,6 +1,5 @@
 package com.example.native_ads
 
-import android.content.Context
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -8,6 +7,7 @@ import com.example.core.AdsController
 import com.example.core.ad_units.core.AdUnit
 import com.example.core.commons.NativeConstants.makeGone
 import com.example.native_ads.ui.IshfaqNative
+import com.example.native_ads.ui.IshfaqNativeMediaView
 
 class NativeAdsManager(
 ) {
@@ -25,32 +25,32 @@ class NativeAdsManager(
         }
     }
 
-    fun populateAd(context: Context,adFrame: View, adViewLayout: IshfaqNative?, ad: AdUnit) {
-        (ad as AdMobNativeAd).nativeAd?.let { nativeAd ->
+    fun populateAd(adViewLayout: IshfaqNative?, ad: AdUnit) {
+        (ad as AdMobNativeAd).nativeAd.let { nativeAd ->
             adViewLayout?.apply {
                 getNativeAdView()?.let { nativeAdView ->
                     val adIcon: ImageView? = findViewById(R.id.adIcon)
                     val adHeadLine: TextView? = findViewById(R.id.adHeadline)
                     val adBody: TextView? = findViewById(R.id.adBody)
+                    val mediaView: IshfaqNativeMediaView? = findViewById(R.id.mediaView)
                     val adCtaBtn: TextView? = findViewById(R.id.adCtaBtn)
-//                    val mMedia = findViewById<MediaView>(R.id.mediaView)
-                    /*
-                                        nativeAdView.mediaView = mMedia
-                                        try {
-                                            nativeAdView.mediaView?.let { adMedia ->
-                                                adMedia.makeGone(nativeAd.mediaContent == null)
-                                                mMedia.makeGone(nativeAd.mediaContent == null)
-                                                if (nativeAd.mediaContent != null) {
-                                                    adMedia.mediaContent = nativeAd.mediaContent
-                                                }
-                                            } ?: run {
-                                                nativeAdView.mediaView?.makeGone()
-                                                mMedia?.makeGone()
-                                            }
-                                        } catch (_: Exception) {
-                                            nativeAdView.mediaView?.makeGone()
-                                            mMedia?.makeGone()
-                                        }*/
+                    val mMedia = mediaView?.getNativeAdView()
+                    nativeAdView.mediaView = mMedia
+                    try {
+                        nativeAdView.mediaView?.let { adMedia ->
+                            adMedia.makeGone(nativeAd.mediaContent == null)
+                            mMedia.makeGone(nativeAd.mediaContent == null)
+                            if (nativeAd.mediaContent != null) {
+                                adMedia.mediaContent = nativeAd.mediaContent
+                            }
+                        } ?: run {
+                            nativeAdView.mediaView?.makeGone()
+                            mMedia?.makeGone()
+                        }
+                    } catch (_: Exception) {
+                        nativeAdView.mediaView?.makeGone()
+                        mMedia?.makeGone()
+                    }
                     val mIconView = nativeAdView.findViewById<ImageView>(R.id.adIcon)
                     nativeAdView.iconView = mIconView
                     nativeAdView.iconView?.let {

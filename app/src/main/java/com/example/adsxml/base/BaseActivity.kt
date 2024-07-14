@@ -1,14 +1,10 @@
-package com.example.adsxml
+package com.example.adsxml.base
 
 import android.app.Activity
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import com.example.core.ad_units.core.AdUnit
+import com.example.native_ads.base.BaseNativeAdsActivity
 
-abstract class BaseActivity : AppCompatActivity() {
-
-    private val nativeAd: AdUnit? = null
-
+abstract class BaseActivity : BaseNativeAdsActivity() {
     lateinit var mContext: Activity
 
     override fun onCreate(savedInstanceState: Bundle?) {
