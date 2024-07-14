@@ -4,19 +4,20 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.core.AdsController
+import com.example.core.AdsManager
 import com.example.core.ad_units.core.AdUnit
 import com.example.core.commons.NativeConstants.makeGone
-import com.example.native_ads.ui.IshfaqNative
 import com.example.native_ads.ui.IshfaqNativeMediaView
+import com.example.native_ads.ui.IshfaqNativeView
 
 class NativeAdsManager(
-) {
+) : AdsManager {
 
     private val adsMap = HashMap<String, NativeAdsController>()
 
-    fun getAdController(key: String): AdsController? = adsMap[key]
+    override fun getAdController(key: String): AdsController? = adsMap[key]
 
-    fun addNewController(
+    override fun addNewController(
         adKey: String, adId: String
     ) {
         val controller = adsMap[adKey]
@@ -25,8 +26,8 @@ class NativeAdsManager(
         }
     }
 
-    fun populateAd(adViewLayout: IshfaqNative?, ad: AdUnit) {
-        (ad as AdMobNativeAd).nativeAd.let { nativeAd ->
+    fun populateAd(adViewLayout: IshfaqNativeView?, ad: AdUnit, onPopulated: () -> Unit) {
+        (ad as? AdMobNativeAd)?.nativeAd?.let { nativeAd ->
             adViewLayout?.apply {
                 getNativeAdView()?.let { nativeAdView ->
                     val adIcon: ImageView? = findViewById(R.id.adIcon)
@@ -92,7 +93,7 @@ class NativeAdsManager(
                         adCtaBtn?.text = btn
                     }
                     nativeAdView.setNativeAd(nativeAd)
-
+                    onPopulated.invoke()
                 }
             }
         }

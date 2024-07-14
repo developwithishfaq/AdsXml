@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.RelativeLayout
 import com.google.android.gms.ads.nativead.NativeAdView
 
-class IshfaqNative @JvmOverloads constructor(
+class IshfaqNativeView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0

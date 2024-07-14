@@ -47,6 +47,7 @@ dependencies {
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
 
+    implementation(libs.fb.shimmer)
 
     implementation(project(":admobAds:core"))
 }
