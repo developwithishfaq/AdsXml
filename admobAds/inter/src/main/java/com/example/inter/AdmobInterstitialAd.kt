@@ -39,8 +39,8 @@ class AdmobInterstitialAd(
     }
 
     override fun destroyAd() {
-
     }
+
 
     override fun getAdType(): AdType {
         return AdType.INTERSTITIAL

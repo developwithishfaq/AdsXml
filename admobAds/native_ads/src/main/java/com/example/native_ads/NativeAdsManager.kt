@@ -13,7 +13,7 @@ import com.example.native_ads.ui.IshfaqNativeView
 class NativeAdsManager(
 ) : AdsManager {
 
-    private val adsMap = HashMap<String, NativeAdsController>()
+    private val adsMap = HashMap<String, AdmobNativeAdsController>()
 
     override fun getAdController(key: String): AdsController? = adsMap[key]
 
@@ -22,7 +22,7 @@ class NativeAdsManager(
     ) {
         val controller = adsMap[adKey]
         if (controller == null) {
-            adsMap[adKey] = NativeAdsController(adId, adId)
+            adsMap[adKey] = AdmobNativeAdsController(adId, adId)
         }
     }
 

@@ -1,23 +1,23 @@
-package com.example.native_ads
+package com.example.inter
 
 import android.app.Activity
 import com.example.core.AdsController
 import com.example.core.AdsLoadingStatusListener
-import com.example.core.ad_units.IshfaqNativeAd
+import com.example.core.ad_units.IshfaqInterstitialAd
 import com.example.core.ad_units.core.AdUnit
 import com.example.core.commons.AdsCommons.logAds
-import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.nativead.NativeAd
-import com.google.android.gms.ads.nativead.NativeAdOptions
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 
-internal class NativeAdsController(
+internal class IshfaqInterstitialAdsController(
     private val adKey: String,
     private val adId: String,
 ) : AdsController {
     private var canRequestAd = true
     private var adEnabled = true
-    private var currentNativeAd: IshfaqNativeAd? = null
+    private var currentInterstitialAd: IshfaqInterstitialAd? = null
 
     private var listener: AdsLoadingStatusListener? = null
 
@@ -42,29 +42,34 @@ internal class NativeAdsController(
         }
         canRequestAd = false
         logAds("Native Ad Requested key=$adKey")
-        val adLoader = AdLoader.Builder(context, adId)
-            .forNativeAd { nativeAd: NativeAd ->
-                // If your app is going to request only one native ad at a time, set the currentNativeAd reference to null.
-                logAds("Native Ad Loaded key=$adKey")
-                currentNativeAd?.let {
-                    it.destroyAd()
+        InterstitialAd.load(
+            context,
+            adId.ifBlank { "ca-app-pub-3940256099942544/1033173712" },
+            AdRequest.Builder().build(),
+            object : InterstitialAdLoadCallback() {
+                override fun onAdLoaded(interAd: InterstitialAd) {
+                    super.onAdLoaded(interAd)
+
+                    // If your app is going to request only one native ad at a time, set the currentNativeAd reference to null.
+                    logAds("Native Ad Loaded key=$adKey")
+                    currentInterstitialAd?.let {
+                        it.destroyAd()
+                    }
+                    currentInterstitialAd = null
+                    canRequestAd = true
+                    currentInterstitialAd = AdmobInterstitialAd(interAd)
+                    listener?.onAdLoaded()
                 }
-                canRequestAd = true
-                currentNativeAd = AdMobNativeAd(nativeAd)
-                listener?.onAdLoaded()
-            }
-            .withAdListener(object : com.google.android.gms.ads.AdListener() {
-                override fun onAdFailedToLoad(error: com.google.android.gms.ads.LoadAdError) {
+
+                override fun onAdFailedToLoad(error: LoadAdError) {
+                    super.onAdFailedToLoad(error)
                     logAds("Native Ad Failed To Load key=$adKey")
                     canRequestAd = true
-                    currentNativeAd = null
+                    currentInterstitialAd = null
                     listener?.onAdFailedToLoad(error.message, error.code)
                 }
-            })
-            .withNativeAdOptions(NativeAdOptions.Builder().build())
-            .build()
-
-        adLoader.loadAd(AdRequest.Builder().build())
+            }
+        )
     }
 
     override fun resetListener(context: Activity) {
@@ -72,8 +77,8 @@ internal class NativeAdsController(
     }
 
     override fun destroyAd(context: Activity) {
-        currentNativeAd?.destroyAd()
-        currentNativeAd = null
+        currentInterstitialAd?.destroyAd()
+        currentInterstitialAd = null
     }
 
     override fun getAdKey(): String {
@@ -81,7 +86,7 @@ internal class NativeAdsController(
     }
 
     override fun isAdAvailable(): Boolean {
-        return currentNativeAd != null
+        return currentInterstitialAd != null
     }
 
     override fun isAdRequesting(): Boolean {
@@ -93,7 +98,7 @@ internal class NativeAdsController(
     }
 
     override fun getAvailableAd(): AdUnit? {
-        return currentNativeAd
+        return currentInterstitialAd
     }
 
 

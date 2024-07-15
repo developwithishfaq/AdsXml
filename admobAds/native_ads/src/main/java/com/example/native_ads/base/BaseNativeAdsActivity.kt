@@ -5,7 +5,6 @@ import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.example.core.AdsController
 import com.example.core.AdsLoadingStatusListener
-import com.example.core.IshfaqAdsSdk
 import com.example.core.ad_units.core.AdUnit
 import com.example.core.commons.AdsCommons.logAds
 import com.example.core.commons.NativeConstants.inflateLayoutByName
@@ -17,15 +16,12 @@ import org.koin.android.ext.android.inject
 
 abstract class BaseNativeAdsActivity : AppCompatActivity() {
 
-
-    val adsManager: IshfaqAdsSdk by inject()
     private val nativeAdsManager: NativeAdsManager by inject()
     private var nativeAdController: AdsController? = null
     private var nativeAd: AdUnit? = null
 
-    private var isShowNativeAdCalled = false
+    private var isShowAdCalled = false
     private var key = ""
-    private var adId = ""
     private var layoutName = ""
     private var enabled = false
     private var adFrame: FrameLayout? = null
@@ -36,7 +32,6 @@ abstract class BaseNativeAdsActivity : AppCompatActivity() {
 
     fun showNativeAd(
         key: String,
-        adId: String,
         layoutName: String = "native_ad_normal_layout",
         enabled: Boolean,
         adFrame: FrameLayout,
@@ -44,20 +39,19 @@ abstract class BaseNativeAdsActivity : AppCompatActivity() {
         oneTimeUse: Boolean = true
     ) {
         this.key = key
-        this.adId = adId
         this.oneTimeUse = oneTimeUse
         this.layoutName = layoutName
         this.enabled = enabled
         this.showShimmerLayout = showShimmerLayout
         this.adLoaded = false
         this.adFrame = adFrame
-        isShowNativeAdCalled = true
+        isShowAdCalled = true
         loadAd()
     }
 
     override fun onResume() {
         super.onResume()
-        if (isShowNativeAdCalled && enabled) {
+        if (isShowAdCalled && enabled) {
             loadAd()
         }
     }
@@ -73,14 +67,12 @@ abstract class BaseNativeAdsActivity : AppCompatActivity() {
         if (showShimmerLayout) {
             showShimmerLayout()
         }
-        nativeAdsManager.addNewController(key, adId)
         nativeAdController = nativeAdsManager.getAdController(key)
         nativeAdController?.loadAd(
             (this@BaseNativeAdsActivity), object : AdsLoadingStatusListener {
                 override fun onAdLoaded() {
                     adLoaded = true
                     nativeAd = nativeAdController?.getAvailableAd()
-
                     populateNativeAd()
                 }
 
@@ -130,7 +122,7 @@ abstract class BaseNativeAdsActivity : AppCompatActivity() {
         }
     }
 
-    fun destroyLoadedAd() {
+    private fun destroyLoadedAd() {
         nativeAdController?.destroyAd(this@BaseNativeAdsActivity)
     }
 }

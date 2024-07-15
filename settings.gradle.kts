@@ -1,5 +1,11 @@
 import java.net.URI
 
+include(":admobAds:app_open")
+
+
+include(":admobAds:banner_ads")
+
+
 pluginManagement {
     repositories {
         google {

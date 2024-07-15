@@ -57,7 +57,9 @@ dependencies {
 
     implementation(project(":admobAds:core"))
     implementation(project(":admobAds:inter"))
+    implementation(project(":admobAds:banner_ads"))
     implementation(project(":admobAds:native_ads"))
+    implementation(project(":admobAds:app_open"))
 //    implementation("com.ikame.android-sdk:ikm-android-sdk-release:3.0.140-beta")
 
 

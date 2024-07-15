@@ -10,6 +10,8 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/admobAds" />
+            <option value="$PROJECT_DIR$/admobAds/app_open" />
+            <option value="$PROJECT_DIR$/admobAds/banner_ads" />
             <option value="$PROJECT_DIR$/admobAds/core" />
             <option value="$PROJECT_DIR$/admobAds/inter" />
             <option value="$PROJECT_DIR$/admobAds/native_ads" />
