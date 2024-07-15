@@ -1,7 +1,15 @@
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("maven-publish")
+    id("signing")
+
 }
+
+group = "com.github.jitpack"
+version = "1.0"
+
 
 android {
     namespace = "com.example.admobads"
@@ -31,6 +39,10 @@ android {
         jvmTarget = "1.8"
     }
 }
+publishing {
+    publications {
+    }
+}
 
 dependencies {
 
@@ -42,4 +54,29 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation(libs.fb.shimmer)
+
+}
+
+
+afterEvaluate {
+    publishing {
+        publications {
+            // Creates a Maven publication called "release".
+            create<MavenPublication>("release") {
+                from(components["release"])
+                groupId = "com.github.developwithishfaq"
+                artifactId = "ads_sdk"
+                version = "1.0"
+            }
+        }
+    }/*
+    repositories {
+        maven {
+            url = uri("your-repository-url")
+            credentials {
+                username = project.findProperty("repoUser") as String? ?: "defaultUser"
+                password = project.findProperty("repoPassword") as String? ?: "defaultPassword"
+            }
+        }
+    }*/
 }
