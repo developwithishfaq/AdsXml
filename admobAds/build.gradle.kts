@@ -3,12 +3,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     id("maven-publish")
-    id("signing")
-
 }
-
-group = "com.github.jitpack"
-version = "1.0"
 
 
 android {
@@ -69,14 +64,5 @@ afterEvaluate {
                 version = "1.0"
             }
         }
-    }/*
-    repositories {
-        maven {
-            url = uri("your-repository-url")
-            credentials {
-                username = project.findProperty("repoUser") as String? ?: "defaultUser"
-                password = project.findProperty("repoPassword") as String? ?: "defaultPassword"
-            }
-        }
-    }*/
+    }
 }
